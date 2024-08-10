@@ -1,0 +1,37 @@
+{
+    "query": {
+      "match": {
+        "title": {
+          "query": "{WORD}",
+          "boost": 0.9
+        }
+      }
+    },
+    "knn": [ 
+        {
+            "field": "title_embedding",
+            "query_vector_builder": {
+                "text_embedding": {
+                    "model_id": "cl-tohoku__bert-base-japanese-v2",
+                    "model_text": "{WORD}"
+                }
+            },
+            "k": 5,
+            "num_candidates": 50,
+            "boost": 0.1
+        },
+        {
+            "field": "text_embedding",
+            "query_vector_builder": {
+                "text_embedding": {
+                    "model_id": "cl-tohoku__bert-base-japanese-v2",
+                    "model_text": "{WORD}"
+                }
+            },
+            "k": 10,
+            "num_candidates": 10,
+            "boost": 0.5
+        }
+    ],
+    "size": 10
+}

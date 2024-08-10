@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+requests
+elasticsearch==8.13.0
+pandas
+fugashi
+ipadic
+unidic_lite
+eland
+transformers==4.35.1
+torch==2.1.0
