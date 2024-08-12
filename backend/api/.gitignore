@@ -1,4 +1,1 @@
-wiki/
-*ipynb
-*crt
-data/
+./__pycache__/

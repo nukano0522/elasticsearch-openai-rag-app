@@ -1,7 +1,9 @@
 import json
 
 
-def search_keyword(es, index_name: str, model_name: str, search_word: str, size=30):
+def search(
+    es, index_name: str, model_name: str, search_pattern: str, search_word: str, size=30
+):
 
     def create_query(search_word):
         """クエリの作成
@@ -10,8 +12,12 @@ def search_keyword(es, index_name: str, model_name: str, search_word: str, size=
         Returns:
             dict: クエリ
         """
+        if search_pattern == "vector":
+            query_file = "vector_search_02.json"
+        elif search_pattern == "hybrid":
+            query_file = "hybrid_search_01.json"
 
-        with open("./query/vector_search_01.json", "r") as f:
+        with open(f"./query/{query_file}", "r") as f:
             query_data = f.read()
 
         replace_dict = {
@@ -26,7 +32,7 @@ def search_keyword(es, index_name: str, model_name: str, search_word: str, size=
         return query
 
     script_query = create_query(search_word)
-    print(script_query)
+    # print(script_query)
 
     response = es.search(index=index_name, body=script_query)
 

@@ -49,12 +49,15 @@ docker cp es01:/usr/share/elasticsearch/config/certs/ca/ca.crt ./backend/api
 eland_import_hub_model \
 --clear-previous \
 --url "https://localhost:9200" \
---ca-certs "./backend/api/ca.crt" \
+--ca-certs "./backend/api/certs/ca.crt" \
 --es-username elastic \
 --es-password elastic \
---hub-model-id cl-nagoya/sup-simcse-ja-base \
+--hub-model-id tohoku-nlp/bert-base-japanese-v2 \
 --task-type text_embedding \
 --start
+
+tohoku-nlp/bert-base-japanese-v2
+cl-nagoya/sup-simcse-ja-base
 ```
 
 # --hub-model-id cl-tohoku/bert-base-japanese-v2 \

@@ -9,6 +9,7 @@ services:
     container_name: setup
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
+      - ./backend/api/certs:/output
     user: "0"
     command: >
       bash -c '
@@ -64,6 +65,16 @@ services:
         until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
         echo "Setting kibana_system password";
         until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
+        
+        # ca.crtをホスト側にコピーする処理を追加
+        if [ -f /usr/share/elasticsearch/config/certs/ca/ca.crt ]; then
+          echo "Copying ca.crt to host directory";
+          cp /usr/share/elasticsearch/config/certs/ca/ca.crt /output/;
+          echo "ca.crt copied successfully";
+        else
+          echo "ca.crt not found";
+        fi;
+        
         echo "All done!";
       '
     healthcheck:
@@ -84,7 +95,6 @@ services:
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
       - esdata01:/usr/share/elasticsearch/data
-      - ./:/etc/elasticsearch
     ports:
       - ${ES_PORT}:9200
     environment:
@@ -162,9 +172,10 @@ services:
     ports:
       - 8002:8002
     volumes:
-      - backend-data:/src
+      - ./backend/api:/src
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
     healthcheck:
       test:
         [
@@ -187,7 +198,7 @@ services:
     ports:
       - 8501:8501
     volumes:
-      - frontend-data:/src
+      - ./frontend/app:/src
 
 volumes:
   certs:
@@ -196,15 +207,3 @@ volumes:
     driver: local
   kibanadata:
     driver: local
-  backend-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./backend/api
-  frontend-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./frontend/app

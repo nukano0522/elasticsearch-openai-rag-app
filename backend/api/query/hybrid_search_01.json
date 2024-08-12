@@ -1,0 +1,28 @@
+{
+  "fields": ["title", "text", "text_embedding"],
+  "size": 10,
+  "query": {
+    "match": {
+      "text": {
+        "query": "{WORD}"
+      }
+    }
+  },
+  "knn":{
+    "field": "text_embedding",
+    "k": 10,
+    "num_candidates": 100,
+    "query_vector_builder": {
+      "text_embedding": {
+        "model_id": "{MODEL_ID}",
+        "model_text": "{WORD}"
+      }
+    }
+  },
+  "rank": {
+    "rrf": {
+      "window_size": 50,
+      "rank_constant": 20
+    }
+  }
+}
