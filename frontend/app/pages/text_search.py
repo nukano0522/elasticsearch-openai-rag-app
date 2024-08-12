@@ -11,6 +11,11 @@ def keyword_search():
             "モデルを選択してください",
             ("cl-tohoku__bert-base-japanese-v2", "cl-nagoya__sup-simcse-ja-base"),
         )
+        # 検索種類の選択
+        # テキストと値のペアを指定（ベクトル検索: vector, ハイブリッド検索: hybrid）
+        search_pattern = st.selectbox(
+            "検索種類を選択してください", ("vector", "hybrid")
+        )
         text_input = st.text_input(label="検索キーワードを入力してください")
         submit_button = st.form_submit_button(label="Submit")
 
@@ -24,7 +29,7 @@ def keyword_search():
     if submit_button:
         # ここでバックエンドのデータ処理を行う
         res = requests.get(
-            f"http://backend:8002/search/{INDEX_NAME}/{model_name}/{text_input}"
+            f"http://backend:8002/search/{INDEX_NAME}/{model_name}/{search_pattern}/{text_input}"
         )
         # st.write(res.json())
         data = res.json()

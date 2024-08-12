@@ -37,12 +37,6 @@
   },
   "mappings": {
     "properties": {
-        "title_embedding": {
-            "type": "dense_vector",
-            "dims": 768,
-            "index": true,
-            "similarity": "cosine"
-        },
         "text_embedding": {
             "type": "dense_vector",
             "dims": 768,

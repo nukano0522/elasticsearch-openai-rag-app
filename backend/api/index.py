@@ -1,4 +1,3 @@
-from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 from elasticsearch.client import IngestClient
 
@@ -49,7 +48,12 @@ def get_inference_pipeline(es, embedding_model):
         raise ValueError("Invalid model name.")
 
     # パイプラインが存在しない場合は作成
-    if not IngestClient(es).get_pipeline(id=INFEREENCE_PIPELINE_NAME, ignore=404):
+    is_pipeline_exist = IngestClient(es).get_pipeline(
+        id=INFEREENCE_PIPELINE_NAME, ignore=404
+    )
+    print(f"Pipeline {INFEREENCE_PIPELINE_NAME} exists: {is_pipeline_exist}")
+    print(not is_pipeline_exist)
+    if not is_pipeline_exist:
         with open("./config/inference_pipeline.json", "r") as f:
             inference_pipeline_data = f.read()
         replace_dict = {
@@ -111,7 +115,7 @@ def create_index(es, index_name, embedding_model):
     bulk(es, bulk_insert(docs), chunk_size=50, request_timeout=600)
 
 
-def create_index_async(es, index_name, embedding_model):
+def create_index_async(es, es_a, index_name, embedding_model):
     """インデックスの作成
     Args:
         es (Elasticsearch): Elasticsearchの接続情報
@@ -142,7 +146,7 @@ def create_index_async(es, index_name, embedding_model):
     from elasticsearch.helpers import async_bulk
 
     async def main(docs):
-        await async_bulk(es, gendata(docs), chunk_size=50, request_timeout=600)
+        await async_bulk(es_a, gendata(docs), chunk_size=50, request_timeout=600)
 
     docs = get_data()
     print(f"Read {len(docs)} documents.")
@@ -154,6 +158,10 @@ def create_index_async(es, index_name, embedding_model):
     # # 並列に実行して終るまで待つ
     # loop.run_until_complete(main(docs))
 
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(main(docs))
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(main(docs))
+
+    finally:
+        loop.close()

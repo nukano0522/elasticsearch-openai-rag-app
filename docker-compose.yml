@@ -9,6 +9,7 @@ services:
     container_name: setup
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
+      - ./backend/api/certs:/output  # 追加: ホストのディレクトリをマウント
     user: "0"
     command: >
       bash -c '
@@ -64,6 +65,16 @@ services:
         until curl -s --cacert config/certs/ca/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
         echo "Setting kibana_system password";
         until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
+        
+        # ca.crtをホスト側にコピーする処理を追加
+        if [ -f /usr/share/elasticsearch/config/certs/ca/ca.crt ]; then
+          echo "Copying ca.crt to host directory";
+          cp /usr/share/elasticsearch/config/certs/ca/ca.crt /output/;
+          echo "ca.crt copied successfully";
+        else
+          echo "ca.crt not found";
+        fi;
+        
         echo "All done!";
       '
     healthcheck:
@@ -165,6 +176,7 @@ services:
       - backend-data:/src
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
     healthcheck:
       test:
         [

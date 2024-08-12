@@ -1,25 +1,13 @@
 {
     "query": {
       "match": {
-        "title": {
+        "text": {
           "query": "{WORD}",
           "boost": 0.9
         }
       }
     },
     "knn": [ 
-        {
-            "field": "title_embedding",
-            "query_vector_builder": {
-                "text_embedding": {
-                    "model_id": "{MODEL_ID}",
-                    "model_text": "{WORD}"
-                }
-            },
-            "k": 5,
-            "num_candidates": 50,
-            "boost": 0.1
-        },
         {
             "field": "text_embedding",
             "query_vector_builder": {

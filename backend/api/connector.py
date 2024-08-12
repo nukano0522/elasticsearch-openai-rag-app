@@ -2,6 +2,8 @@ from elasticsearch import Elasticsearch
 from elasticsearch import AsyncElasticsearch
 import os, time
 
+CERTS_DIR = "./certs"
+
 
 def connect_to_elasticsearch():
     # Elasticsearchのコンテナが立ち上がるまで接続試行する
@@ -11,7 +13,7 @@ def connect_to_elasticsearch():
         try:
             es = Elasticsearch(
                 "https://es01:9200",
-                ca_certs="./ca.crt",
+                ca_certs=f"{CERTS_DIR}/ca.crt",
                 basic_auth=("elastic", os.environ["ELASTIC_PASSWORD"]),
             )
             es_info = es.info()
@@ -31,7 +33,7 @@ def connect_to_elasticsearch():
 def connect_to_async_elasticsearch():
     es_a = AsyncElasticsearch(
         "https://es01:9200",
-        ca_certs="./ca.crt",
+        ca_certs=f"{CERTS_DIR}/ca.crt",
         basic_auth=("elastic", os.environ["ELASTIC_PASSWORD"]),
     )
 

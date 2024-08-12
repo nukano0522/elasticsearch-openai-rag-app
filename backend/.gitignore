@@ -1,1 +1,5 @@
-data/
+api/data/
+api/query/bak
+api/certs/
+api/config/bak/
+api/__pycache__/
