@@ -12,7 +12,7 @@
             "field": "title_embedding",
             "query_vector_builder": {
                 "text_embedding": {
-                    "model_id": "cl-tohoku__bert-base-japanese-v2",
+                    "model_id": "{MODEL_ID}",
                     "model_text": "{WORD}"
                 }
             },
@@ -24,7 +24,7 @@
             "field": "text_embedding",
             "query_vector_builder": {
                 "text_embedding": {
-                    "model_id": "cl-tohoku__bert-base-japanese-v2",
+                    "model_id": "{MODEL_ID}",
                     "model_text": "{WORD}"
                 }
             },

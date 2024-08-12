@@ -23,7 +23,7 @@ KIBANA_PASSWORD = your_password
 ES_PORT = 9200
 CLUSTER_NAME = test_cluster
 LICENSE = trial
-MEM_LIMIT = 1073741824
+MEM_LIMIT = 3573741824
 KIBANA_PORT = 5601
 ```
 
@@ -44,8 +44,28 @@ docker-compose up
 # Docker間通信で証明書を取得できるのかもしれないがうまくいかなかったので、elasticsearchのコンテナからコピーして使用
 docker cp es01:/usr/share/elasticsearch/config/certs/ca/ca.crt ./backend/api
 
+# 日本語埋め込みモデル
+```bash
+eland_import_hub_model \
+--clear-previous \
+--url "https://localhost:9200" \
+--ca-certs "./backend/api/ca.crt" \
+--es-username elastic \
+--es-password elastic \
+--hub-model-id cl-nagoya/sup-simcse-ja-base \
+--task-type text_embedding \
+--start
+```
+
+# --hub-model-id cl-tohoku/bert-base-japanese-v2 \
+
 # FastAPI経由でインデックス作成
-curl -X POST http://localhost:8002/es/create_index/vector-test-index-01
+curl -X POST http://localhost:8002/es/create_index/bert-vector-index-01
+curl -X POST http://localhost:8002/es/create_index/bert-vector-index-01/cl-tohoku__bert-base-japanese-v2
+curl -X POST http://localhost:8002/es/create_index/simcse-vector-index-01/cl-nagoya__sup-simcse-ja-base
+
+curl -X POST http://localhost:8002/es/create_index_async/bert-vector-index-01/cl-tohoku__bert-base-japanese-v2
+curl -X POST http://localhost:8002/es/create_index_async/simcse-vector-index-01/cl-nagoya__sup-simcse-ja-base
 ```
 - http://localhost:8501/ からStreamlitアプリにアクセス
 

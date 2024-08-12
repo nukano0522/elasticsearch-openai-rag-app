@@ -3,7 +3,7 @@
     "processors": [
         {
             "inference": {
-                "model_id": "cl-tohoku__bert-base-japanese-v2",
+                "model_id": "{MODEL_ID}",
                 "input_output": [
                     {
                         "input_field": "title",

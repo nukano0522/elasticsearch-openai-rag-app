@@ -9,3 +9,6 @@ unidic_lite
 eland
 transformers==4.35.1
 torch==2.1.0
+aiohttp
+python-dotenv
+openai==1.40.3

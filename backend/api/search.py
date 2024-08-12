@@ -1,35 +1,34 @@
 import json
 
-def search_keyword(es, index_name, search_word, size=30):
+
+def search_keyword(es, index_name: str, model_name: str, search_word: str, size=30):
+
     def create_query(search_word):
-        """ クエリの作成
+        """クエリの作成
         Args:
             search_word (str): 検索クエリ
         Returns:
             dict: クエリ
         """
 
-        with open("./query/bert_vector_search_01.json", "r") as f:
+        with open("./query/vector_search_01.json", "r") as f:
             query_data = f.read()
 
         replace_dict = {
-            "{WORD}": search_word
+            "{WORD}": search_word,
+            "{MODEL_ID}": model_name,
         }
         for key, value in replace_dict.items():
-            query = query_data.replace(key, value)
+            query_data = query_data.replace(key, value)
 
-        # query = json.loads(query_data)
+        query = json.loads(query_data)
 
         return query
 
-
     script_query = create_query(search_word)
-    # print(script_query)
+    print(script_query)
 
-    response = es.search(
-        index=index_name,
-        body=script_query
-    )
+    response = es.search(index=index_name, body=script_query)
 
     result = []
 
@@ -39,5 +38,5 @@ def search_keyword(es, index_name, search_word, size=30):
         text = hit["_source"]["text"][:500]
         score = hit["_score"]
         result.append({"title": title, "text": text, "score": score})
-    
+
     return result
