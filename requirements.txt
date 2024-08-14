@@ -1,0 +1,7 @@
+torch==2.1.0
+transformers==4.35.1
+sentence_transformers
+fugashi
+ipadic
+unidic_lite
+eland

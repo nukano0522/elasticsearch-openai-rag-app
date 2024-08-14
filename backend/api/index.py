@@ -6,7 +6,7 @@ import json, gzip
 import re
 import pandas as pd
 
-DOC_NAME = "jawikinews-20240805-cirrussearch-content.json.gz"
+DOC_NAME = "jawikibooks-20240812-cirrussearch-general.json.gz"
 IDX_LEN_MAX = 1000
 INFEREENCE_PIPELINE_NAME = "bert-japanese-text-embeddings"
 DEFAULT_INDEX_NAME = "vector-test-index-01"
