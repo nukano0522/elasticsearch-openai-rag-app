@@ -52,11 +52,11 @@ eland_import_hub_model \
 --ca-certs "./backend/api/certs/ca.crt" \
 --es-username elastic \
 --es-password elastic \
---hub-model-id tohoku-nlp/bert-base-japanese-v2 \
+--hub-model-id cl-tohoku/bert-base-japanese-v2 \
 --task-type text_embedding \
 --start
 
-tohoku-nlp/bert-base-japanese-v2
+cl-tohoku/bert-base-japanese-v2
 cl-nagoya/sup-simcse-ja-base
 ```
 
