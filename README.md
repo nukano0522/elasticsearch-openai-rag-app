@@ -1,4 +1,4 @@
-# Elasticsearch + FastAPI + Streamlit を使った検索アプリ
+# RAG App（Elasticsearch + OpenAI）
 
 ## 準備
 
